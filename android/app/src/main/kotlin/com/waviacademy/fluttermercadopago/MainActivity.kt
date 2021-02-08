@@ -5,7 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import com.mercadopago.android.px.core.MercadoPagoCheckout
 import com.mercadopago.android.px.model.Payment
-import io.flutter.app.FlutterActivity
+import io.flutter.embedding.android.FlutterActivity
 import io.flutter.plugin.common.MethodChannel
 
 
@@ -17,7 +17,7 @@ class MainActivity: FlutterActivity() {
     }
 
     private fun initFlutterChannels() {
-        val channelMercadoPago = MethodChannel(flutterView, "waviacademy.com/mercadoPago")
+        val channelMercadoPago = MethodChannel(flutterEngine!!.dartExecutor.binaryMessenger, "waviacademy.com/mercadoPago")
 
         channelMercadoPago.setMethodCallHandler { methodCall, result ->
             val args = methodCall.arguments as HashMap<String, Any>;
@@ -37,7 +37,7 @@ class MainActivity: FlutterActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        val channelMercadoPagoRespuesta = MethodChannel(flutterView, "waviacademy.com/mercadoPagoRespuesta")
+        val channelMercadoPagoRespuesta = MethodChannel(flutterEngine!!.dartExecutor.binaryMessenger, "waviacademy.com/mercadoPagoRespuesta")
         if(resultCode == MercadoPagoCheckout.PAYMENT_RESULT_CODE) {
             val payment = data!!.getSerializableExtra(MercadoPagoCheckout.EXTRA_PAYMENT_RESULT) as Payment
             val paymentStatus = payment.paymentStatus
